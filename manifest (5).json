@@ -1,0 +1,10 @@
+{
+  "display_name": "iGlass Status — ความสัมพันธ์ ความทรงจำ ปฏิทิน",
+  "loading_order": 120,
+  "js": "index.js",
+  "css": "style.css",
+  "author": "Kiro",
+  "version": "1.0.0",
+  "homePage": "https://github.com/YOUR_NAME/iglass-status",
+  "generate_interceptor": "iglassStatusInterceptor"
+}

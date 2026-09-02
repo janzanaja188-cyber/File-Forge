@@ -1,0 +1,180 @@
+/* iGlass Status — iOS / iGlassOS look
+   หลักการ: กระจกฝ้า ขอบมน เงานุ่ม ไม่ฮาร์ดโค้ดขาวดำ ใช้เทาโปร่งเพื่อให้เข้าได้ทั้งธีมสว่างและมืด */
+
+#iglass-root {
+  --ig-size: 54px;
+  --ig-accent: #0a84ff;
+  --ig-up: #30d158;
+  --ig-down: #ff453a;
+  --ig-glass: rgba(120, 120, 128, 0.18);
+  --ig-stroke: rgba(128, 128, 128, 0.28);
+  --ig-txt: inherit;
+  --ig-sub: rgba(128, 128, 128, 0.95);
+  --ig-spring: cubic-bezier(.22,1.2,.36,1);
+
+  position: fixed;
+  right: 10px;
+  top: 62%;
+  z-index: 2147483000;
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  gap: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", "Noto Sans Thai", sans-serif;
+  color: var(--ig-txt);
+  pointer-events: none;
+}
+#iglass-root.ig-left { right: auto; left: 10px; flex-direction: row; }
+#iglass-root > * { pointer-events: auto; }
+
+/* ── ไอคอนลอย ─────────────────────────────────────────── */
+.ig-icon {
+  position: relative;
+  width: var(--ig-size);
+  height: var(--ig-size);
+  border-radius: 50%;
+  cursor: grab;
+  touch-action: none;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: var(--ig-glass);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  box-shadow: 0 6px 20px rgba(0,0,0,.22), inset 0 0 0 .5px var(--ig-stroke);
+  transition: transform .18s var(--ig-spring);
+}
+.ig-icon:active { cursor: grabbing; transform: scale(.92); }
+.ig-icon::after {
+  content: attr(data-letter);
+  position: absolute;
+  font-size: calc(var(--ig-size) * .4);
+  font-weight: 700;
+  opacity: .8;
+}
+.ig-av {
+  position: relative;
+  z-index: 1;
+  width: calc(var(--ig-size) - 10px);
+  height: calc(var(--ig-size) - 10px);
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+/* วงแหวนบอกระดับความสัมพันธ์ วาดด้วย conic-gradient จาก JS */
+.ig-ring {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  z-index: 0;
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+}
+
+/* ป้ายบวกลบ */
+.ig-badge {
+  position: absolute;
+  top: -6px;
+  left: -10px;
+  z-index: 3;
+  min-width: 26px;
+  padding: 2px 7px;
+  border-radius: 11px;
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(0,0,0,.28);
+}
+#iglass-root.ig-left .ig-badge { left: auto; right: -10px; }
+.ig-badge.up { background: var(--ig-up); }
+.ig-badge.down { background: var(--ig-down); }
+.ig-badge.go { animation: ig-pop 1.8s var(--ig-spring) forwards; }
+@keyframes ig-pop {
+  0%   { opacity: 0; transform: translateY(6px) scale(.6); }
+  18%  { opacity: 1; transform: translateY(-4px) scale(1.14); }
+  32%  { transform: translateY(-2px) scale(1); }
+  78%  { opacity: 1; transform: translateY(-8px); }
+  100% { opacity: 0; transform: translateY(-18px); }
+}
+
+/* ── แถบสถานะ ─────────────────────────────────────────── */
+.ig-panel {
+  width: min(78vw, 290px);
+  max-height: min(66vh, 460px);
+  display: flex;
+  flex-direction: column;
+  padding: 13px;
+  border-radius: 22px;
+  background: var(--ig-glass);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  box-shadow: 0 14px 44px rgba(0,0,0,.3), inset 0 0 0 .5px var(--ig-stroke);
+  animation: ig-in .26s var(--ig-spring);
+  transform-origin: right center;
+}
+#iglass-root.ig-left .ig-panel { transform-origin: left center; }
+@keyframes ig-in {
+  from { opacity: 0; transform: scale(.86) translateX(12px); }
+  to   { opacity: 1; transform: scale(1) translateX(0); }
+}
+#iglass-root.ig-left .ig-panel { animation-name: ig-in-left; }
+@keyframes ig-in-left {
+  from { opacity: 0; transform: scale(.86) translateX(-12px); }
+  to   { opacity: 1; transform: scale(1) translateX(0); }
+}
+
+.ig-panel-head { display: flex; align-items: center; gap: 9px; margin-bottom: 10px; }
+.ig-panel-av { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; box-shadow: inset 0 0 0 .5px var(--ig-stroke); }
+.ig-panel-id { flex: 1; min-width: 0; }
+.ig-panel-name { font-size: 15px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ig-panel-tier { font-size: 11.5px; color: var(--ig-sub); margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ig-x { border: 0; background: transparent; color: var(--ig-sub); font-size: 14px; cursor: pointer; padding: 4px 6px; border-radius: 8px; }
+.ig-x:active { background: rgba(128,128,128,.2); }
+
+.ig-bar { height: 6px; border-radius: 3px; background: rgba(128,128,128,.22); overflow: hidden; }
+.ig-bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #5e5ce6, var(--ig-accent)); transition: width .5s var(--ig-spring); }
+.ig-bar-meta { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--ig-sub); margin: 5px 0 10px; }
+
+.ig-tabs { display: flex; gap: 5px; margin-bottom: 9px; background: rgba(128,128,128,.14); padding: 3px; border-radius: 11px; }
+.ig-tab { flex: 1; border: 0; background: transparent; color: var(--ig-sub); font-size: 12px; font-weight: 600; padding: 6px 4px; border-radius: 9px; cursor: pointer; font-family: inherit; }
+.ig-tab.on { background: rgba(128,128,128,.26); color: var(--ig-txt); }
+
+/* min-height 0 จำเป็นกับลูกของ flex ไม่งั้นมันไม่ยอมย่อแล้วเลื่อนไม่ได้ */
+.ig-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; margin: 0 -3px; padding: 0 3px; }
+.ig-empty { font-size: 11.5px; color: var(--ig-sub); text-align: center; padding: 18px 8px; line-height: 1.7; }
+
+.ig-row { display: flex; align-items: flex-start; gap: 7px; padding: 7px 6px; border-radius: 10px; font-size: 12px; line-height: 1.5; }
+.ig-row + .ig-row { box-shadow: inset 0 .5px 0 var(--ig-stroke); }
+.ig-row.failed .ig-row-txt { opacity: .55; text-decoration: line-through; }
+.ig-row-txt { flex: 1; min-width: 0; word-break: break-word; }
+.ig-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+.ig-dot.mem { background: #5e5ce6; }
+.ig-dot.plan { background: var(--ig-accent); }
+.ig-dot.done { background: var(--ig-up); }
+.ig-dot.failed { background: var(--ig-down); }
+.ig-del { border: 0; background: transparent; color: var(--ig-sub); font-size: 11px; cursor: pointer; padding: 2px 4px; border-radius: 6px; opacity: .55; flex-shrink: 0; }
+.ig-del:active { opacity: 1; background: rgba(255,69,58,.18); color: var(--ig-down); }
+
+.ig-acts { display: flex; gap: 6px; margin-top: 10px; }
+.ig-btn { flex: 1; border: 0; padding: 9px 6px; border-radius: 11px; font-size: 11.5px; font-weight: 600; cursor: pointer; font-family: inherit; background: rgba(128,128,128,.2); color: var(--ig-txt); transition: transform .14s var(--ig-spring); }
+.ig-btn:active { transform: scale(.95); }
+.ig-btn.primary { background: var(--ig-accent); color: #fff; }
+.ig-foot { font-size: 10px; color: var(--ig-sub); text-align: center; margin-top: 8px; line-height: 1.55; }
+
+/* ── หน้าตั้งค่า ──────────────────────────────────────── */
+.iglass-settings .ig-ver { font-size: 11px; opacity: .7; margin: 6px 0; }
+.iglass-settings .ig-set-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 7px 0; }
+.iglass-settings .ig-set-row > span { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.iglass-settings .ig-set-row i { font-style: normal; font-size: 11px; opacity: .68; line-height: 1.45; }
+.iglass-settings .ig-set-row input[type="number"] { width: 74px; flex-shrink: 0; }
+.iglass-settings .ig-set-acts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+
+/* ── มือถือ ───────────────────────────────────────────── */
+@media (max-width: 520px) {
+  #iglass-root { --ig-size: 50px; }
+  .ig-panel { width: min(80vw, 270px); max-height: 58vh; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ig-panel, .ig-badge.go, .ig-bar-fill { animation: none !important; transition: none !important; }
+}
