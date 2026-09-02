@@ -1,5 +1,5 @@
 {
-  "display_name": "iGlass Status — ความสัมพันธ์ ความทรงจำ ปฏิทิน",
+  "display_name": "iGlass Status Test",
   "loading_order": 120,
   "js": "index.js",
   "css": "style.css",
