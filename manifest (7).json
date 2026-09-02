@@ -1,0 +1,10 @@
+{
+  "display_name": "File Forge — ให้บอทแก้ไฟล์แล้วส่งกลับ",
+  "loading_order": 130,
+  "js": "index.js",
+  "css": "style.css",
+  "author": "Kiro",
+  "version": "1.0.0",
+  "homePage": "https://github.com/YOUR_NAME/file-forge",
+  "generate_interceptor": "fileForgeInterceptor"
+}
