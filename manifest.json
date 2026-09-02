@@ -5,6 +5,6 @@
   "css": "style.css",
   "author": "Kiro",
   "version": "1.0.0",
-  "homePage": "https://github.com/YOUR_NAME/iglass-status",
+  "homePage": "https://github.com/janzanaja188-cyber/iGlass-Status-Test",
   "generate_interceptor": "iglassStatusInterceptor"
 }
